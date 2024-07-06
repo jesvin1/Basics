@@ -1,0 +1,162 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "name": "SupportResistance.ipynb",
+      "provenance": [],
+      "collapsed_sections": [],
+      "authorship_tag": "ABX9TyMerRcIzNDXSOCOD6zxYlJX",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/jesvin1/Udemy_Algo_Trading/blob/master/SupportResistance.ipynb\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "9iYuFs8n0lGI",
+        "colab_type": "code",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 538
+        },
+        "outputId": "6d151fc3-42ed-4ea8-afb4-52360dc972d2"
+      },
+      "source": [
+        "#installing package using pip\n",
+        "#!pip install yfinance\n",
+        "!pip install mpl_finance\n",
+        "\n",
+        "#Importing Packages and setting global parameters\n",
+        "import pandas as pd\n",
+        "import numpy as np\n",
+        "#import yfinance\n",
+        "from mpl_finance import candlestick_ohlc\n",
+        "import matplotlib.dates as mpl_dates\n",
+        "import matplotlib.pyplot as plt\n",
+        "plt.rcParams['figure.figsize'] = [12, 7]\n",
+        "plt.rc('font', size=14)\n",
+        "\n",
+        "#Getting Data for processing\n",
+        "#name = 'SPY'\n",
+        "#ticker = yfinance.Ticker(name)\n",
+        "#df = ticker.history(interval=\"1d\",start=\"2020-03-15\", end=\"2020-07-15\")\n",
+        "df['Date'] = pd.to_datetime(df.index)\n",
+        "df['Date'] = df['Date'].apply(mpl_dates.date2num)\n",
+        "df = df.loc[:,['Date', 'Open', 'High', 'Low', 'Close']]\n",
+        "\n",
+        "#Defining functions for the support and resistance\n",
+        "def isSupport(df,i):\n",
+        "  support = df['Low'][i] < df['Low'][i-1]  and df['Low'][i] < df['Low'][i+1] and df['Low'][i+1] < df['Low'][i+2] and df['Low'][i-1] < df['Low'][i-2]\n",
+        "  return support\n",
+        "def isResistance(df,i):\n",
+        "  resistance = df['High'][i] > df['High'][i-1]  and df['High'][i] > df['High'][i+1] and df['High'][i+1] > df['High'][i+2] and df['High'][i-1] > df['High'][i-2]\n",
+        "  return resistance\n",
+        "\n",
+        "#Finding the level\n",
+        "levels = []\n",
+        "for i in range(2,df.shape[0]-2):\n",
+        "  if isSupport(df,i):\n",
+        "    levels.append((i,df['Low'][i]))\n",
+        "  elif isResistance(df,i):\n",
+        "    levels.append((i,df['High'][i]))\n",
+        "\n",
+        "#Defining Plot function\n",
+        "def plot_all():\n",
+        "  fig, ax = plt.subplots()\n",
+        "  candlestick_ohlc(ax,df.values,width=0.6, \\\n",
+        "                   colorup='green', colordown='red', alpha=0.8)\n",
+        "  date_format = mpl_dates.DateFormatter('%d %b %Y')\n",
+        "  ax.xaxis.set_major_formatter(date_format)\n",
+        "  fig.autofmt_xdate()\n",
+        "  fig.tight_layout()\n",
+        "  for level in levels:\n",
+        "    plt.hlines(level[1],xmin=df['Date'][level[0]],\\\n",
+        "               xmax=max(df['Date']),colors='blue')\n",
+        "  fig.show()\n",
+        "\n",
+        "#Reducing number of support and resistance lines\n",
+        "s =  np.mean(df['High'] - df['Low'])\n",
+        "def isFarFromLevel(l):\n",
+        "   return np.sum([abs(l-x) < s  for x in levels]) == 0\n",
+        "levels = []\n",
+        "for i in range(2,df.shape[0]-2):\n",
+        "  if isSupport(df,i):\n",
+        "    l = df['Low'][i]\n",
+        "    if isFarFromLevel(l):\n",
+        "      levels.append((i,l))\n",
+        "  elif isResistance(df,i):\n",
+        "    l = df['High'][i]\n",
+        "    if isFarFromLevel(l):\n",
+        "      levels.append((i,l))"
+      ],
+      "execution_count": 1,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "Collecting yfinance\n",
+            "  Downloading https://files.pythonhosted.org/packages/c2/31/8b374a12b90def92a4e27d0fc595fc43635f395984e36a075244d98bd265/yfinance-0.1.54.tar.gz\n",
+            "Requirement already satisfied: pandas>=0.24 in /usr/local/lib/python3.6/dist-packages (from yfinance) (1.0.5)\n",
+            "Requirement already satisfied: numpy>=1.15 in /usr/local/lib/python3.6/dist-packages (from yfinance) (1.18.5)\n",
+            "Requirement already satisfied: requests>=2.20 in /usr/local/lib/python3.6/dist-packages (from yfinance) (2.23.0)\n",
+            "Requirement already satisfied: multitasking>=0.0.7 in /usr/local/lib/python3.6/dist-packages (from yfinance) (0.0.9)\n",
+            "Requirement already satisfied: pytz>=2017.2 in /usr/local/lib/python3.6/dist-packages (from pandas>=0.24->yfinance) (2018.9)\n",
+            "Requirement already satisfied: python-dateutil>=2.6.1 in /usr/local/lib/python3.6/dist-packages (from pandas>=0.24->yfinance) (2.8.1)\n",
+            "Requirement already satisfied: chardet<4,>=3.0.2 in /usr/local/lib/python3.6/dist-packages (from requests>=2.20->yfinance) (3.0.4)\n",
+            "Requirement already satisfied: idna<3,>=2.5 in /usr/local/lib/python3.6/dist-packages (from requests>=2.20->yfinance) (2.10)\n",
+            "Requirement already satisfied: certifi>=2017.4.17 in /usr/local/lib/python3.6/dist-packages (from requests>=2.20->yfinance) (2020.6.20)\n",
+            "Requirement already satisfied: urllib3!=1.25.0,!=1.25.1,<1.26,>=1.21.1 in /usr/local/lib/python3.6/dist-packages (from requests>=2.20->yfinance) (1.24.3)\n",
+            "Requirement already satisfied: six>=1.5 in /usr/local/lib/python3.6/dist-packages (from python-dateutil>=2.6.1->pandas>=0.24->yfinance) (1.15.0)\n",
+            "Building wheels for collected packages: yfinance\n",
+            "  Building wheel for yfinance (setup.py) ... \u001b[?25l\u001b[?25hdone\n",
+            "  Created wheel for yfinance: filename=yfinance-0.1.54-py2.py3-none-any.whl size=22409 sha256=b3c8bb861afce68a41ff6701423802f4917d1549cc75937256a2442e1d1659bd\n",
+            "  Stored in directory: /root/.cache/pip/wheels/f9/e3/5b/ec24dd2984b12d61e0abf26289746c2436a0e7844f26f2515c\n",
+            "Successfully built yfinance\n",
+            "Installing collected packages: yfinance\n",
+            "Successfully installed yfinance-0.1.54\n",
+            "Collecting mpl_finance\n",
+            "  Downloading https://files.pythonhosted.org/packages/9d/de/8169ea4403d6cb8322e74cc48b6834d1dfbed81931d17f1f26b2140160d8/mpl_finance-0.10.1-py3-none-any.whl\n",
+            "Requirement already satisfied: matplotlib in /usr/local/lib/python3.6/dist-packages (from mpl_finance) (3.2.2)\n",
+            "Requirement already satisfied: cycler>=0.10 in /usr/local/lib/python3.6/dist-packages (from matplotlib->mpl_finance) (0.10.0)\n",
+            "Requirement already satisfied: pyparsing!=2.0.4,!=2.1.2,!=2.1.6,>=2.0.1 in /usr/local/lib/python3.6/dist-packages (from matplotlib->mpl_finance) (2.4.7)\n",
+            "Requirement already satisfied: kiwisolver>=1.0.1 in /usr/local/lib/python3.6/dist-packages (from matplotlib->mpl_finance) (1.2.0)\n",
+            "Requirement already satisfied: python-dateutil>=2.1 in /usr/local/lib/python3.6/dist-packages (from matplotlib->mpl_finance) (2.8.1)\n",
+            "Requirement already satisfied: numpy>=1.11 in /usr/local/lib/python3.6/dist-packages (from matplotlib->mpl_finance) (1.18.5)\n",
+            "Requirement already satisfied: six in /usr/local/lib/python3.6/dist-packages (from cycler>=0.10->matplotlib->mpl_finance) (1.15.0)\n",
+            "Installing collected packages: mpl-finance\n",
+            "Successfully installed mpl-finance-0.10.1\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "ZWGgSreZ00rK",
+        "colab_type": "code",
+        "colab": {}
+      },
+      "source": [
+        ""
+      ],
+      "execution_count": 2,
+      "outputs": []
+    }
+  ]
+}

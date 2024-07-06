@@ -1,0 +1,98 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "name": "Getdata_Yfinance.ipynb",
+      "provenance": [],
+      "authorship_tag": "ABX9TyMsQnzlMOqd2F5ktLtTxn3+",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/jesvin1/Udemy_Algo_Trading/blob/master/Getdata_Yfinance.ipynb\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "MlXXNUB2s3Yo",
+        "colab_type": "code",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 380
+        },
+        "outputId": "757523c0-2df6-4e99-afc2-8676b13bdfba"
+      },
+      "source": [
+        "!pip install yfinance"
+      ],
+      "execution_count": 1,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "Collecting yfinance\n",
+            "  Downloading https://files.pythonhosted.org/packages/c2/31/8b374a12b90def92a4e27d0fc595fc43635f395984e36a075244d98bd265/yfinance-0.1.54.tar.gz\n",
+            "Requirement already satisfied: pandas>=0.24 in /usr/local/lib/python3.6/dist-packages (from yfinance) (1.0.3)\n",
+            "Requirement already satisfied: numpy>=1.15 in /usr/local/lib/python3.6/dist-packages (from yfinance) (1.18.3)\n",
+            "Requirement already satisfied: requests>=2.20 in /usr/local/lib/python3.6/dist-packages (from yfinance) (2.23.0)\n",
+            "Requirement already satisfied: multitasking>=0.0.7 in /usr/local/lib/python3.6/dist-packages (from yfinance) (0.0.9)\n",
+            "Requirement already satisfied: pytz>=2017.2 in /usr/local/lib/python3.6/dist-packages (from pandas>=0.24->yfinance) (2018.9)\n",
+            "Requirement already satisfied: python-dateutil>=2.6.1 in /usr/local/lib/python3.6/dist-packages (from pandas>=0.24->yfinance) (2.8.1)\n",
+            "Requirement already satisfied: certifi>=2017.4.17 in /usr/local/lib/python3.6/dist-packages (from requests>=2.20->yfinance) (2020.4.5.1)\n",
+            "Requirement already satisfied: urllib3!=1.25.0,!=1.25.1,<1.26,>=1.21.1 in /usr/local/lib/python3.6/dist-packages (from requests>=2.20->yfinance) (1.24.3)\n",
+            "Requirement already satisfied: idna<3,>=2.5 in /usr/local/lib/python3.6/dist-packages (from requests>=2.20->yfinance) (2.9)\n",
+            "Requirement already satisfied: chardet<4,>=3.0.2 in /usr/local/lib/python3.6/dist-packages (from requests>=2.20->yfinance) (3.0.4)\n",
+            "Requirement already satisfied: six>=1.5 in /usr/local/lib/python3.6/dist-packages (from python-dateutil>=2.6.1->pandas>=0.24->yfinance) (1.12.0)\n",
+            "Building wheels for collected packages: yfinance\n",
+            "  Building wheel for yfinance (setup.py) ... \u001b[?25l\u001b[?25hdone\n",
+            "  Created wheel for yfinance: filename=yfinance-0.1.54-py2.py3-none-any.whl size=22409 sha256=7540aa288c308b261a771b06f4e3a4d01ce8784dbdda6f5c9ea89141dabe2d25\n",
+            "  Stored in directory: /root/.cache/pip/wheels/f9/e3/5b/ec24dd2984b12d61e0abf26289746c2436a0e7844f26f2515c\n",
+            "Successfully built yfinance\n",
+            "Installing collected packages: yfinance\n",
+            "Successfully installed yfinance-0.1.54\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "fuI__hhOtKEw",
+        "colab_type": "code",
+        "colab": {}
+      },
+      "source": [
+        "import yfinance as yf"
+      ],
+      "execution_count": 0,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "4CWfWXSstQ_m",
+        "colab_type": "code",
+        "colab": {}
+      },
+      "source": [
+        ""
+      ],
+      "execution_count": 0,
+      "outputs": []
+    }
+  ]
+}
